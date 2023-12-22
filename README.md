@@ -14,6 +14,13 @@ What does it mean in Elixir ? How hard or easy it is ?
 
 [Slides](docs/HumanTalks.png) are available under the form of a PNG with an embedded [excalidraw](https://excalidraw.com/) schema in the `docs/` folder. The rest of the repository is a demo showcasing the deployment of the same application deployed with a monolith or a service-based architecture with the same repository.
 
+
+With [just](https://github.com/casey/just) installed,
+
+```
+just # List all available commands
+```
+
 ## Ressources
 
 - [Elixir in times of microservices, José Valim](https://blog.plataformatec.com.br/2015/06/elixir-in-times-of-microservices/)

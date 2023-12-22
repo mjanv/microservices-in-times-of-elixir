@@ -13,7 +13,7 @@ defmodule Orders.Frontend.Supervisor do
     Logger.info("  🏪 Orders - 🌐 Frontend - Start service")
 
     children = [
-      {Bandit, plug: Orders.Frontend.Plug, startup_log: false}
+      {Bandit, plug: Orders.Frontend.Router, startup_log: false}
     ]
 
     Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
