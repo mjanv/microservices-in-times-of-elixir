@@ -27,7 +27,7 @@ defmodule Payments.Bank do
 
         false ->
           Logger.info("🏦 Bank  - ✅ Validate payment for order #{order_uuid}")
-          {:ok, {order_uuid, UUID.uuid4()}}
+          {:ok, UUID.uuid4()}
       end
 
     {:reply, response, state}

@@ -13,6 +13,11 @@ defmodule Stocks.Application do
       {Task.Supervisor, name: Stocks.TaskSupervisor}
     ]
 
-    Supervisor.start_link(children, strategy: :one_for_one, name: Stocks.Application.Supervisor)
+    Supervisor.start_link(children, strategy: :one_for_one, name: Stocks.Supervisor)
+  end
+
+  def stop(_state) do
+    Logger.info("📦 Stocks - Stop service")
+    :ok
   end
 end

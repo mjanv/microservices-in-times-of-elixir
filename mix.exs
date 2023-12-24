@@ -3,12 +3,10 @@ defmodule Microservices.MixProject do
 
   use Mix.Project
 
-  @version "0.1.0"
-
   def project do
     [
       apps_path: "apps",
-      version: @version,
+      version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       releases: releases(),
@@ -19,13 +17,16 @@ defmodule Microservices.MixProject do
   def releases do
     [
       monolith: [
+        reboot_system_after_config: true,
         applications: [orders: :permanent, payments: :permanent, stocks: :permanent]
       ],
       frontend: [
+        reboot_system_after_config: true,
         applications: [orders: :permanent],
         cookie: "secret"
       ],
       backend: [
+        reboot_system_after_config: true,
         applications: [payments: :permanent, stocks: :permanent],
         cookie: "secret"
       ]

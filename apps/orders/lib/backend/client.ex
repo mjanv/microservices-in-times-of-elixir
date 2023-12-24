@@ -3,18 +3,20 @@ defmodule Orders.Backend.Client do
 
   use GenServer
 
+  alias Orders.{Order, Shop}
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
   def init(args) do
-    Process.send_after(self(), :new, 5_000)
+    Process.send_after(self(), :new, 1_000)
     {:ok, args}
   end
 
   def handle_info(:new, state) do
-    Process.send_after(self(), :new, 15_000)
-    {:ok, _} = Orders.Shop.new_order()
+    Process.send_after(self(), :new, 1_000)
+    {:ok, _} = [amount: 1_000] |> Order.new() |> Shop.send_order()
     {:noreply, state}
   end
 end

@@ -5,6 +5,8 @@ defmodule Orders.Shop do
 
   require Logger
 
+  alias Orders.Order
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -14,33 +16,34 @@ defmodule Orders.Shop do
     {:ok, %{count: 0}}
   end
 
-  def new_order do
-    uuid = UUID.uuid4()
-    :ok = GenServer.cast(Orders.Shop, {:new_order, uuid})
-    {:ok, uuid}
+  def send_order(%Order{} = order) do
+    :ok = GenServer.cast(Orders.Shop, {:send, order})
+    {:ok, order}
   end
 
-  def handle_cast({:new_order, order_uuid}, %{count: count} = state) do
-    Logger.info("🛒 Shop  - 🧾 Order n°#{order_uuid} received (#{count})")
+  def send_order(_), do: {:error, :invalid_order}
 
-    with {:ok, _} <- is_stock_available?(order_uuid),
-         :ok <- Logger.info("🛒 Shop  - ➡️  Stock available for order #{order_uuid}"),
-         {:ok, {_, payment_uuid}} <- pay_order(order_uuid),
-         :ok <- Logger.info("🛒 Shop  - ➡️  Order #{order_uuid} payed #{payment_uuid}") do
-      Logger.info("🛒 Shop  - ✅ Order #{order_uuid} accepted\n")
+  def handle_cast({:send, %Order{} = order}, %{count: count} = state) do
+    Logger.info("🛒 Shop  - 🧾 Order n°#{order.uuid} received (#{count})")
+
+    with {:ok, _} <- is_stock_available?(order),
+         :ok <- Logger.info("🛒 Shop  - ➡️  Stock available for order #{order.uuid}"),
+         {:ok, payment_uuid} <- pay_order(order),
+         :ok <- Logger.info("🛒 Shop  - ➡️  Order #{order.uuid} payed #{payment_uuid}") do
+      Logger.info("🛒 Shop  - ✅ Order #{order.uuid} accepted\n")
     else
       {:error, error} ->
-        Logger.info("🛒 Shop  - ❌ Order #{order_uuid} due to #{error}\n")
+        Logger.info("🛒 Shop  - ❌ Order #{order.uuid} due to #{error}\n")
     end
 
     {:noreply, %{state | count: count + 1}}
   end
 
-  defp pay_order(order_uuid) do
-    GenServer.call({:global, Payments.Bank}, {:pay, order_uuid})
+  defp pay_order(%Order{} = order) do
+    GenServer.call({:global, Payments.Bank}, {:pay, order.uuid})
   end
 
-  def is_stock_available?(order_uuid) do
-    Stocks.Stock.is_stock_available?(order_uuid, Node.self())
+  def is_stock_available?(%Order{} = order) do
+    Stocks.Stock.is_stock_available?(order.uuid, Node.self())
   end
 end
