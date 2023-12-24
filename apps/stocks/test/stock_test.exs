@@ -5,18 +5,24 @@ defmodule Stocks.StockTest do
 
   alias Stocks.Stock
 
-  test "An item can be removed from the stock if items are left" do
+  test "Items can be removed from the stock if items are left" do
     stock = %Stock{items: 5}
 
-    {:ok, stock} = Stock.remove_item(stock)
+    {:ok, stock} = Stock.remove_items(stock, 2)
 
-    assert stock.items == 4
+    assert stock.items == 3
   end
 
-  test "An item can't be removed from the stock if no items are left" do
+  test "Items cant be removed from the stock if no items are left" do
     stock = %Stock{items: 0}
 
-    {:error, :no_items_left} = Stock.remove_item(stock)
+    {:error, :no_items_left} = Stock.remove_items(stock)
+  end
+
+  test "Items can't be removed from the stock if not enough items are left" do
+    stock = %Stock{items: 3}
+
+    {:error, :no_items_left} = Stock.remove_items(stock, 4)
   end
 
   test "A stock can be refurbished by adding items" do

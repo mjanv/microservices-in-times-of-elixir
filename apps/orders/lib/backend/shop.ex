@@ -44,6 +44,6 @@ defmodule Orders.Shop do
   end
 
   def stock_available?(%Order{} = order) do
-    Stocks.stock_available?(order.uuid, Node.self())
+    Stocks.stock_available?(order.uuid, order.items, Node.self())
   end
 end

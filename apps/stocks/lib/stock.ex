@@ -11,11 +11,13 @@ defmodule Stocks.Stock do
     {:ok, %{stock | items: stock.items + items}}
   end
 
-  def remove_item(%__MODULE__{items: items}) when items <= 0 do
+  def remove_items(stock, items \\ 1)
+
+  def remove_items(%__MODULE__{items: items_left}, items) when items_left - items < 0 do
     {:error, :no_items_left}
   end
 
-  def remove_item(%__MODULE__{items: items} = stock) do
-    {:ok, %{stock | items: items - 1}}
+  def remove_items(%__MODULE__{items: items_left} = stock, items) do
+    {:ok, %{stock | items: items_left - items}}
   end
 end

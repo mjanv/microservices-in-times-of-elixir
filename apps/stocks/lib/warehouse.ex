@@ -17,19 +17,19 @@ defmodule Stocks.Warehouse do
     {:ok, %Stock{items: 10}}
   end
 
-  def stock_available?(order_uuid, node) do
+  def stock_available?(order_uuid, items, node) do
     {Stocks.TaskSupervisor, node}
     |> Task.Supervisor.async(fn ->
-      GenServer.call(__MODULE__, {:remove_item, order_uuid})
+      GenServer.call(__MODULE__, {:remove_item, order_uuid, items})
     end)
     |> Task.await()
   end
 
-  def handle_call({:remove_item, order_uuid}, _from, stock) do
+  def handle_call({:remove_item, order_uuid, items}, _from, stock) do
     Logger.info("📦 Warehouse - ⬅️  Remove item from stock")
 
     stock
-    |> Stock.remove_item()
+    |> Stock.remove_items(items)
     |> tap(fn
       {:ok, _} ->
         Logger.info("📦 Stock - ⬅️  Check stock for order #{order_uuid}")
