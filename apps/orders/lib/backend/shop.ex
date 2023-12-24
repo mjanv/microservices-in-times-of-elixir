@@ -17,16 +17,16 @@ defmodule Orders.Shop do
   end
 
   def send_order(%Order{} = order) do
-    :ok = GenServer.cast(Orders.Shop, {:send, order})
+    :ok = GenServer.cast(Orders.Shop, {:send_order, order})
     {:ok, order}
   end
 
   def send_order(_), do: {:error, :invalid_order}
 
-  def handle_cast({:send, %Order{} = order}, %{count: count} = state) do
+  def handle_cast({:send_order, %Order{} = order}, %{count: count} = state) do
     Logger.info("🛒 Shop  - 🧾 Order n°#{order.uuid} received (#{count})")
 
-    with {:ok, _} <- is_stock_available?(order),
+    with {:ok, _} <- stock_available?(order),
          :ok <- Logger.info("🛒 Shop  - ➡️  Stock available for order #{order.uuid}"),
          {:ok, payment_uuid} <- pay_order(order),
          :ok <- Logger.info("🛒 Shop  - ➡️  Order #{order.uuid} payed #{payment_uuid}") do
@@ -40,10 +40,10 @@ defmodule Orders.Shop do
   end
 
   defp pay_order(%Order{} = order) do
-    GenServer.call({:global, Payments.Bank}, {:pay, order.uuid})
+    GenServer.call({:global, Payments.Bank}, {:pay, order.uuid, order.price})
   end
 
-  def is_stock_available?(%Order{} = order) do
-    Stocks.Stock.is_stock_available?(order.uuid, Node.self())
+  def stock_available?(%Order{} = order) do
+    Stocks.stock_available?(order.uuid, Node.self())
   end
 end

@@ -10,13 +10,14 @@ defmodule Payments.Application do
     Logger.info("💵 Payments - Start service #{inspect(type)}")
 
     children = [
-      # Payments.Bank,
+      Payments.Bank,
       {Cluster.Supervisor, [topologies(), [name: Payments.Cluster]]}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Payments.Supervisor)
   end
 
+  @impl true
   def stop(_state) do
     Logger.info("💵 Payments - Stop service")
     :ok

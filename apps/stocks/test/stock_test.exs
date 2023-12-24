@@ -1,7 +1,7 @@
 defmodule Stocks.StockTest do
   @moduledoc false
 
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias Stocks.Stock
 
@@ -17,5 +17,13 @@ defmodule Stocks.StockTest do
     stock = %Stock{items: 0}
 
     {:error, :no_items_left} = Stock.remove_item(stock)
+  end
+
+  test "A stock can be refurbished by adding items" do
+    stock = %Stock{items: 3}
+
+    {:ok, stock} = Stock.add_items(stock, items: 4)
+
+    assert stock.items == 7
   end
 end

@@ -16,7 +16,7 @@ defmodule Orders.Backend.Client do
 
   def handle_info(:new, state) do
     Process.send_after(self(), :new, 1_000)
-    {:ok, _} = [amount: 1_000] |> Order.new() |> Shop.send_order()
+    {:ok, _} = [items: 1, price: 1_000] |> Order.new() |> Shop.send_order()
     {:noreply, state}
   end
 end

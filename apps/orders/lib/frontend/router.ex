@@ -16,7 +16,7 @@ defmodule Orders.Frontend.Router do
     conn
     |> put_resp_content_type("text/plain")
     |> then(fn conn ->
-      [amount: 1_000]
+      [items: 1, price: 1_000]
       |> Orders.Order.new()
       |> Orders.Shop.send_order()
       |> case do

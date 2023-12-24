@@ -3,12 +3,13 @@ defmodule Orders.Order do
 
   @type t :: %__MODULE__{
           uuid: String.t(),
-          amount: integer()
+          items: integer(),
+          price: integer()
         }
 
-  defstruct [:uuid, :amount]
+  defstruct [:uuid, :items, :price]
 
-  def new(amount: amount) do
-    %__MODULE__{uuid: UUID.uuid4(), amount: amount}
+  def new(items: items, price: price) do
+    %__MODULE__{uuid: UUID.uuid4(), items: items, price: price}
   end
 end
