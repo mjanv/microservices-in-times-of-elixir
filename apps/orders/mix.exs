@@ -10,8 +10,10 @@ defmodule Orders.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.16",
+      elixirc_options: [warnings_as_errors: true],
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -22,11 +24,19 @@ defmodule Orders.MixProject do
     ]
   end
 
+  defp aliases do
+    [
+      docs: ["docs -f html -o ../../doc/orders"]
+    ]
+  end
+
   defp deps do
     [
+      {:stocks, in_umbrella: true},
       {:uuid, "~> 1.1"},
       {:libcluster, "~> 3.3"},
-      {:bandit, "~> 1.0"}
+      {:bandit, "~> 1.0"},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
 end

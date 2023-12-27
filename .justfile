@@ -8,12 +8,20 @@ install:
 
 # Check code quality
 quality: install
-  mix format --check-formatted
-  mix credo --strict
+  mix quality
 
 # Run the tests
 test: install
   mix test
+
+# Generate the documentation
+docs: install
+  mix docs
+  @echo "Documentations available in docs/ directory"
+
+# Is the application ready to commit?
+ready: install quality test
+  @echo "Ready to commit!"
 
 # Run the monolith application locally
 run: install

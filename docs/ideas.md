@@ -1,3 +1,8 @@
+# Ideas
+
+- [Distributed applications](#distributed-applications)
+- [Blue-green deployments](#bluegreen-deployments)
+
 # Distributed applications
 
 - https://hexdocs.pm/elixir/1.16/Application.html
@@ -5,24 +10,24 @@
 - https://hexdocs.pm/mix/Mix.Tasks.Compile.App.html
 - https://learnyousomeerlang.com/distributed-otp-applications
 
+
+The [kernel application](https://www.erlang.org/doc/man/kernel_app.html) can be configured in a Elixir application through two ways. Firstly, the `vm.args` file can be edited to add key/values through the syntax:
+
+```erlang
+-kernel config_key config_value
 ```
-If you want to configure these applications for a release, you can
-specify them in your vm.args file:
 
-    -kernel config_key config_value
+The other way is to configure them dynamically through the `config/runtime.exs` file, before making the application reboot after the configuration phase using the syntax:
 
-Alternatively, if you must configure them dynamically, you can wrap
-them in a conditional block in your config files:
+```elixir
+# config/runtime.exs
+config :kernel,
+  config_key: config_value
 
-    if System.get_env("RELEASE_MODE") do
-      config :kernel, ...
-    end
-
-and then configure your releases to reboot after configuration:
-
-    releases: [
-      my_app: [reboot_system_after_config: true]
-    ]
+# mix.exs
+releases: [
+  my_app: [reboot_system_after_config: true]
+]
 ```
 
 # Blue/Green deployments

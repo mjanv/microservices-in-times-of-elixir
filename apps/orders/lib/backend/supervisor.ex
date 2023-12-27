@@ -17,6 +17,6 @@ defmodule Orders.Backend.Supervisor do
       Orders.Shop
     ]
 
-    Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end

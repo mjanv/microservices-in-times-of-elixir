@@ -17,6 +17,6 @@ defmodule Orders.Frontend.Supervisor do
       {Bandit, plug: Orders.Frontend.Router, startup_log: false}
     ]
 
-    Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end

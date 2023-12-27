@@ -10,8 +10,10 @@ defmodule Payments.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.16",
+      elixirc_options: [warnings_as_errors: true],
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -22,10 +24,17 @@ defmodule Payments.MixProject do
     ]
   end
 
+  defp aliases do
+    [
+      docs: ["docs -f html -o ../../doc/payments"]
+    ]
+  end
+
   defp deps do
     [
       {:uuid, "~> 1.1"},
-      {:libcluster, "~> 3.3"}
+      {:libcluster, "~> 3.3"},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
 end

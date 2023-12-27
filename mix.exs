@@ -35,14 +35,17 @@ defmodule Microservices.MixProject do
 
   defp aliases do
     [
-      quality: ["format", "credo --strict"]
+      quality: ["format", "credo --strict", "dialyzer"],
+      test: ["test --trace"],
+      docs: ["cmd mix docs"]
     ]
   end
 
   defp deps do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.21.0", only: :dev}
     ]
   end
 end

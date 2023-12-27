@@ -13,11 +13,19 @@ defmodule Stocks.Stock do
 
   def remove_items(stock, items \\ 1)
 
-  def remove_items(%__MODULE__{items: items_left}, items) when items_left - items < 0 do
-    {:error, :no_items_left}
+  def remove_items(%__MODULE__{items: items_left} = stock, items) when items_left - items < 0 do
+    {:error, stock}
   end
 
   def remove_items(%__MODULE__{items: items_left} = stock, items) do
     {:ok, %{stock | items: items_left - items}}
+  end
+
+  def restock(%__MODULE__{items: stocks} = stock, threshold: threshold, new_items: new_items) do
+    if stocks < threshold do
+      add_items(stock, items: new_items)
+    else
+      {:error, stock}
+    end
   end
 end

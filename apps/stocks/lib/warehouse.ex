@@ -26,35 +26,25 @@ defmodule Stocks.Warehouse do
   end
 
   def handle_call({:remove_item, order_uuid, items}, _from, stock) do
-    Logger.info("📦 Warehouse - ⬅️  Remove item from stock")
-
     stock
+    |> tap(fn _ -> Logger.info("📦 Warehouse - ⬅️  Remove #{items} items from stock") end)
     |> Stock.remove_items(items)
     |> tap(fn
-      {:ok, _} ->
-        Logger.info("📦 Stock - ⬅️  Check stock for order #{order_uuid}")
-        Logger.info("📦 Stock - ✅ Order #{order_uuid} accepted")
-
-      {:error, _} ->
-        Logger.info("📦 Stock - ⬅️  Check stock for order #{order_uuid}")
-        Logger.info("📦 Stock - ❌ Order #{order_uuid} rejected")
+      {:ok, _} -> Logger.info("📦 Stock - ✅ Order #{order_uuid} accepted")
+      {:error, _} -> Logger.info("📦 Stock - ❌ Order #{order_uuid} rejected")
     end)
     |> tap(fn _ -> Process.send_after(self(), :restock, 100) end)
     |> then(fn
-      {:ok, stock} -> {:reply, {:ok, stock}, stock}
-      {:error, _} -> {:reply, {:error, :no_items_left}, stock}
+      {:ok, stock} -> {{:ok, stock}, stock}
+      {:error, stock} -> {{:error, :no_items_left}, stock}
     end)
+    |> then(fn response -> {:reply, response, stock} end)
   end
 
   def handle_info(:restock, stock) do
-    {:ok, stock} =
-      if stock.items < 5 do
-        Logger.info("📦 Warehouse - 🔄 Restock 10 new items")
-        Stock.add_items(stock, items: 10)
-      else
-        {:ok, stock}
-      end
-
-    {:noreply, stock}
+    stock
+    |> Stock.restock(threshold: 5, new_items: 10)
+    |> tap(fn {:ok, _} -> Logger.info("📦 Warehouse - 🔄 Restock 10 new items") end)
+    |> then(fn {_, stock} -> {:noreply, stock} end)
   end
 end
