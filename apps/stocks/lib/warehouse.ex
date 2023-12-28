@@ -20,7 +20,8 @@ defmodule Stocks.Warehouse do
   end
 
   @doc "Check if the stock is available"
-  @spec stock_available?(String.t(), integer(), node()) :: :ok | {:error, :no_items_left}
+  @spec stock_available?(String.t(), integer(), node()) ::
+          {:ok, integer()} | {:error, :no_items_left}
   def stock_available?(order_uuid, items, node) do
     {Stocks.TaskSupervisor, node}
     |> Task.Supervisor.async(fn ->
@@ -28,7 +29,7 @@ defmodule Stocks.Warehouse do
     end)
     |> Task.await()
     |> case do
-      {:ok, _} -> :ok
+      {:ok, stock} -> {:ok, stock.items}
       {:error, :no_items_left} -> {:error, :no_items_left}
     end
   end
@@ -37,7 +38,7 @@ defmodule Stocks.Warehouse do
   def handle_call({:remove_item, order_uuid, items}, _from, stock) do
     stock
     |> tap(fn _ -> Logger.info("📦 Warehouse - ⬅️  Remove #{items} items from stock") end)
-    |> Stock.remove_items(items)
+    |> Stock.remove_items(items: items)
     |> tap(fn
       {:ok, _} -> Logger.info("📦 Stock - ✅ Order #{order_uuid} accepted")
       {:error, _} -> Logger.info("📦 Stock - ❌ Order #{order_uuid} rejected")

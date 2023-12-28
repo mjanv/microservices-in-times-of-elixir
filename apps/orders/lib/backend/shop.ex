@@ -52,7 +52,7 @@ defmodule Orders.Shop do
   end
 
   @doc "Check if the stock is available"
-  @spec stock_available?(Order.t()) :: :ok | {:error, :no_items_left}
+  @spec stock_available?(Order.t()) :: {:ok, integer()} | {:error, :no_items_left}
   def stock_available?(%Order{} = order) do
     Stocks.stock_available?(order.uuid, order.items, Node.self())
   end

@@ -8,7 +8,7 @@ defmodule Stocks.StockTest do
   test "Items can be removed from the stock if items are left" do
     stock = %Stock{items: 5}
 
-    {:ok, stock} = Stock.remove_items(stock, 2)
+    {:ok, stock} = Stock.remove_items(stock, items: 2)
 
     assert stock.items == 3
   end
@@ -16,7 +16,7 @@ defmodule Stocks.StockTest do
   test "Items cant be removed from the stock if no items are left" do
     stock = %Stock{items: 0}
 
-    {:error, stock} = Stock.remove_items(stock)
+    {:error, stock} = Stock.remove_items(stock, items: 3)
 
     assert stock.items == 0
   end
@@ -24,7 +24,7 @@ defmodule Stocks.StockTest do
   test "Items can't be removed from the stock if not enough items are left" do
     stock = %Stock{items: 3}
 
-    {:error, stock} = Stock.remove_items(stock, 4)
+    {:error, stock} = Stock.remove_items(stock, items: 4)
 
     assert stock.items == 3
   end

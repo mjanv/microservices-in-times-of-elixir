@@ -1,3 +1,5 @@
+set dotenv-load
+
 _default:
   @just --list --unsorted  --list-heading '' --list-prefix=''
 
@@ -35,7 +37,7 @@ build: install
 
 # Deploy the application
 deploy app:
-  MIX_ENV=prod _build/prod/rel/{{app}}/bin/{{app}} start
+  RELEASE_NAME=frontend MIX_ENV=prod _build/prod/rel/{{app}}/bin/{{app}} start
 
 # Connect to the application
 remote app:
