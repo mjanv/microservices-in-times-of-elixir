@@ -32,7 +32,7 @@ remote app # Connect to the application
 
 - [Monolith or microservices ?](docs/presentations/monolith_or_microservices.png), a 10-20 minutes presentation, comparing the monolith and microservices approaches during the developement/build/deployment phases of a project, is available under the form of a PNG with an embedded [excalidraw](https://excalidraw.com/).
 
-## Ressources
+### Ressources
 
 *Personal notes about ressources are available in the [docs/ressources](docs/ressources/) folder.*
 
