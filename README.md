@@ -1,10 +1,12 @@
 # Microservices in times of Elixir
 
+## Motivation
+
 For Martin Fowler, "the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms."
 
 This (public) repository is a personal exploration of monolith and service-based software architectures styles and how it can translate to the Elixir ecosystem. How hard or easy it is ? None of the code is meant to be working at any time or be put in production in any future. Basically, a draft notebook!
 
-## Run
+## Application
 
 The repository is a demo showcasing the deployment of the same application using differents architecture styles. Language requirements are full defined in the [.tool-versions](.tool-versions) file. With [asdf](https://asdf-vm.com/) and [just](https://github.com/casey/just) installed,
 
