@@ -1,7 +1,7 @@
 _default:
-  @just --list
+  @just --list --unsorted  --list-heading '' --list-prefix=''
 
-# Install the dependencies
+# Install the requirements & dependencies
 install:
   asdf install
   mix deps.get
@@ -23,11 +23,11 @@ docs: install
 ready: install quality test
   @echo "Ready to commit!"
 
-# Run the monolith application locally
+# Run the monolith application in development mode
 run: install
   mix run --no-halt
 
-# Build the releases
+# Build the releases in production mode
 build: install
   MIX_ENV=prod mix release monolith --overwrite
   MIX_ENV=prod mix release backend --overwrite

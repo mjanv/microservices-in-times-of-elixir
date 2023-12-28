@@ -1,10 +1,16 @@
 defmodule Orders.Backend.Supervisor do
-  @moduledoc false
+  @moduledoc """
+  Backend supervisor
+
+  The supervisor is responsible to start processes for the backend service
+  """
 
   use Supervisor
 
   require Logger
 
+  @doc "Start the supervisor"
+  @spec start_link(any()) :: Supervisor.on_start()
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
   end

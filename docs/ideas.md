@@ -1,7 +1,10 @@
 # Ideas
 
+- [Umbrella applications](#umbrella-applications)
 - [Distributed applications](#distributed-applications)
 - [Blue-green deployments](#bluegreen-deployments)
+
+# Umbrella applications
 
 # Distributed applications
 
@@ -21,8 +24,10 @@ The other way is to configure them dynamically through the `config/runtime.exs` 
 
 ```elixir
 # config/runtime.exs
-config :kernel,
-  config_key: config_value
+if config_env() == :prod do
+  config :kernel,
+    config_key: config_value
+end
 
 # mix.exs
 releases: [

@@ -1,5 +1,7 @@
 defmodule Payments.Application do
-  @moduledoc false
+  @moduledoc """
+  Payments service
+  """
 
   use Application
 
@@ -7,7 +9,11 @@ defmodule Payments.Application do
 
   @impl true
   def start(type, _args) do
-    Logger.info("💵 Payments - Start service #{inspect(type)}")
+    case type do
+      :normal -> Logger.info("💵 Payments - Start service")
+      {:failover, node} -> Logger.info("💵 Payments - Failover service from #{inspect(node)}")
+      {:takeover, node} -> Logger.info("💵 Payments - Takeover service from #{inspect(node)}")
+    end
 
     children = [
       Payments.Bank,

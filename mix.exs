@@ -37,7 +37,7 @@ defmodule Microservices.MixProject do
     [
       quality: ["format", "credo --strict", "dialyzer"],
       test: ["test --trace"],
-      docs: ["cmd mix docs"]
+      docs: ["doctor", "cmd mix docs"]
     ]
   end
 

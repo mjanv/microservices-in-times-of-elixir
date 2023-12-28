@@ -1,28 +1,42 @@
 # Microservices in times of Elixir
 
-From [Martin Fowler - Microservices](https://martinfowler.com/articles/microservices.html), microservices are defined as:
+For Martin Fowler, "the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms."
 
-> the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms
+This (public) repository is a personal exploration of monolith and service-based software architectures styles and how it can translate to the Elixir ecosystem. How hard or easy it is ? None of the code is meant to be working at any time or be put in production in any future. Basically, a draft notebook!
 
-> These services are built around business capabilities and independently deployable by fully automated deployment machinery
+## Run
 
-> There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies
-
-What does it mean in Elixir ? How hard or easy it is ?
-
-## Presentation
-
-[Slides](docs/HumanTalks.png) are available under the form of a PNG with an embedded [excalidraw](https://excalidraw.com/) schema in the `docs/` folder. The rest of the repository is a demo showcasing the deployment of the same application deployed with a monolith or a service-based architecture with the same repository.
-
-
-With [just](https://github.com/casey/just) installed,
+The repository is a demo showcasing the deployment of the same application using differents architecture styles. Language requirements are full defined in the [.tool-versions](.tool-versions) file. With [asdf](https://asdf-vm.com/) and [just](https://github.com/casey/just) installed,
 
 ```
 just # List all available commands
 ```
 
+```
+install    # Install requirements & dependencies
+quality    # Check code quality
+test       # Run the tests
+docs       # Generate the documentation
+ready      # Is the application ready to commit?
+run        # Run the monolith application in development mode
+build      # Build the releases in production mode
+deploy app # Deploy the application
+remote app # Connect to the application
+```
+
+## Documentations
+
+### Presentations
+
+*Presentations are available in the [docs/ressources](docs/presentations/) folder. Send me a DM if you want me to give the presentation IRL or online for you or your team.*
+
+- [Monolith or microservices ?](docs/presentations/monolith_or_microservices.png), a 10-20 minutes presentation, comparing the monolith and microservices approaches during the developement/build/deployment phases of a project, is available under the form of a PNG with an embedded [excalidraw](https://excalidraw.com/).
+
 ## Ressources
 
-- [Elixir in times of microservices, José Valim](https://blog.plataformatec.com.br/2015/06/elixir-in-times-of-microservices/)
+*Personal notes about ressources are available in the [docs/ressources](docs/ressources/) folder.*
+
+- [Martin Fowler - Microservices](docs/ressources/microservices_martin_fowler.md)
+- [Elixir in times of microservices, José Valim](docs/ressources/elixir_in_time_of_microservices_jose_valim.md)
 - [Three real-world examples of distributed Elixir (pt. 1), bigardone.dev](https://bigardone.dev/blog/2021/05/22/three-real-world-examples-of-distributed-elixir-pt-1)
 

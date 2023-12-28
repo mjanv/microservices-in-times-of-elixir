@@ -1,5 +1,7 @@
 defmodule Orders.Application do
-  @moduledoc false
+  @moduledoc """
+  Orders application
+  """
 
   use Application
 
@@ -7,7 +9,11 @@ defmodule Orders.Application do
 
   @impl true
   def start(type, _args) do
-    Logger.info("🏪 Orders - Start service #{inspect(type)}")
+    case type do
+      :normal -> Logger.info("🏪 Orders - Start service")
+      {:failover, node} -> Logger.info("🏪 Orders - Failover service from #{inspect(node)}")
+      {:takeover, node} -> Logger.info("🏪 Orders - Takeover service from #{inspect(node)}")
+    end
 
     children = [
       Orders.Frontend.Supervisor,
