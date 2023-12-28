@@ -10,20 +10,20 @@ This (public) repository is a personal exploration of monolith and service-based
 
 The repository is a demo showcasing the deployment of the same application using differents architecture styles. Language requirements are full defined in the [.tool-versions](.tool-versions) file. With [asdf](https://asdf-vm.com/) and [just](https://github.com/casey/just) installed,
 
-```
+```bash
 just # List all available commands
 ```
 
-```
-install    # Install requirements & dependencies
-quality    # Check code quality
-test       # Run the tests
-docs       # Generate the documentation
-ready      # Is the application ready to commit?
-run        # Run the monolith application in development mode
-build      # Build the releases in production mode
-deploy app # Deploy the application
-remote app # Connect to the application
+```bash
+just install    # Install requirements & dependencies
+just quality    # Check code quality
+just test       # Run the tests
+just docs       # Generate the documentation
+just ready      # Is the application ready to commit?
+just run        # Run the monolith application in development mode
+just build      # Build the releases in production mode
+just deploy app # Deploy the application
+just remote app # Connect to the application
 ```
 
 ## Documentations
