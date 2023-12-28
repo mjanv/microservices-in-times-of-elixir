@@ -15,7 +15,7 @@ defmodule Stocks.Warehouse do
 
   @impl true
   def init(_args) do
-    Logger.info("📦 Warehouse - Init")
+    Logger.info("📦 Warehouse \t| Init")
     {:ok, %Stock{items: 10}}
   end
 
@@ -28,27 +28,23 @@ defmodule Stocks.Warehouse do
       GenServer.call(__MODULE__, {:remove_item, order_uuid, items})
     end)
     |> Task.await()
-    |> case do
-      {:ok, stock} -> {:ok, stock.items}
-      {:error, :no_items_left} -> {:error, :no_items_left}
-    end
   end
 
   @impl true
   def handle_call({:remove_item, order_uuid, items}, _from, stock) do
     stock
-    |> tap(fn _ -> Logger.info("📦 Warehouse - ⬅️  Remove #{items} items from stock") end)
+    |> tap(fn _ -> Logger.info("📦 Warehouse \t| ⬅️  Can I remove #{items} items from stock ?") end)
     |> Stock.remove_items(items: items)
     |> tap(fn
-      {:ok, _} -> Logger.info("📦 Stock - ✅ Order #{order_uuid} accepted")
-      {:error, _} -> Logger.info("📦 Stock - ❌ Order #{order_uuid} rejected")
+      {:ok, _} -> Logger.info("📦 Warehouse \t| ✅ We have enough stock for order #{order_uuid}")
+      {:error, _} -> Logger.info("📦 Warehouse \t| ❌ No stock available for order #{order_uuid}")
     end)
     |> tap(fn _ -> Process.send_after(self(), :restock, 100) end)
     |> then(fn
-      {:ok, stock} -> {{:ok, stock}, stock}
+      {:ok, stock} -> {{:ok, stock.items}, stock}
       {:error, stock} -> {{:error, :no_items_left}, stock}
     end)
-    |> then(fn response -> {:reply, response, stock} end)
+    |> then(fn {response, stock} -> {:reply, response, stock} end)
   end
 
   @impl true

@@ -21,6 +21,12 @@ defmodule Payments.Bank do
   end
 
   @impl true
+  def terminate(reason, _state) do
+    Logger.info("  💵 Payments - 🏦 Bank - Stop service due to #{inspect(reason)}")
+    :ok
+  end
+
+  @impl true
   def handle_call({:pay, order_uuid, amount}, _from, ledger) do
     Payment.new(order_uuid: order_uuid, amount: amount)
     |> pay(ledger)
@@ -46,16 +52,16 @@ defmodule Payments.Bank do
 
   @spec log_payment(Payment.t()) :: :ok
   defp log_payment(%Payment{order_uuid: order_uuid}) do
-    Logger.info("🏦 Bank  - ⬅️  Validating payment for order #{order_uuid}")
+    Logger.info("🏦 Bank \t| ⬅️  Validating payment for order #{order_uuid}")
   end
 
   @spec log_payment_status(Payment.t()) :: :ok
   defp log_payment_status(%Payment{status: :accepted, order_uuid: order_uuid}) do
-    Logger.info("🏦 Bank  - ✅ Payment accepted for order #{order_uuid}")
+    Logger.info("🏦 Bank \t| ✅ Payment accepted for order #{order_uuid}")
   end
 
   defp log_payment_status(%Payment{order_uuid: order_uuid}) do
-    Logger.info("🏦 Bank  - ❌ Validate payment for order #{order_uuid}")
+    Logger.info("🏦 Bank \t| ❌ Validate payment for order #{order_uuid}")
   end
 
   @doc "Add a payment to the ledger"

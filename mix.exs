@@ -18,7 +18,7 @@ defmodule Microservices.MixProject do
     [
       monolith: [
         reboot_system_after_config: true,
-        applications: [orders: :permanent],
+        applications: [orders: :permanent, payments: :permanent, stocks: :permanent],
         cookie: "secret"
       ],
       frontend: [

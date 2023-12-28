@@ -38,3 +38,4 @@ releases: [
 # Blue/Green deployments
 
 - https://blog.differentpla.net/blog/2023/03/21/remote-load-erlang-modules/
+- https://www.erlang.org/doc/design_principles/appup_cookbook.html

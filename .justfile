@@ -36,9 +36,9 @@ build: install
   MIX_ENV=prod mix release frontend --overwrite
 
 # Deploy the application
-deploy app:
-  RELEASE_NAME=frontend MIX_ENV=prod _build/prod/rel/{{app}}/bin/{{app}} start
+deploy app name:
+  RELEASE_NAME={{name}} MIX_ENV=prod _build/prod/rel/{{app}}/bin/{{app}} start
 
 # Connect to the application
-remote app:
-  _build/prod/rel/{{app}}/bin/{{app}} remote
+remote app name:
+  RELEASE_NAME={{name}} MIX_ENV=prod _build/prod/rel/{{app}}/bin/{{app}} remote

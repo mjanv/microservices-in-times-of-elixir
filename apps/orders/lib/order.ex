@@ -14,6 +14,6 @@ defmodule Orders.Order do
   @doc "Creates a new order."
   @spec new([{:items, integer()}, {:price, integer()}]) :: t()
   def new(items: items, price: price) do
-    %__MODULE__{uuid: UUID.uuid4(), items: items, price: price}
+    %__MODULE__{uuid: String.slice(UUID.uuid4(), 0..7), items: items, price: price}
   end
 end

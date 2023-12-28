@@ -30,16 +30,16 @@ defmodule Orders.Shop do
 
   @impl true
   def handle_cast({:send_order, %Order{} = order}, %{count: count} = state) do
-    Logger.info("🛒 Shop  - 🧾 Order n°#{order.uuid} received (#{count})")
+    Logger.info("🛒 Shop  \t| 🧾 New order #{order.uuid} received (#{count} orders today)")
 
     with {:ok, _} <- stock_available?(order),
-         :ok <- Logger.info("🛒 Shop  - ➡️  Stock available for order #{order.uuid}"),
+         :ok <- Logger.info("🛒 Shop \t| ➡️  Stock available for order #{order.uuid}"),
          {:ok, payment_uuid} <- pay_order(order),
-         :ok <- Logger.info("🛒 Shop  - ➡️  Order #{order.uuid} payed #{payment_uuid}") do
-      Logger.info("🛒 Shop  - ✅ Order #{order.uuid} accepted\n")
+         :ok <- Logger.info("🛒 Shop \t| ➡️  Order #{order.uuid} payed #{payment_uuid}") do
+      Logger.info("🛒 Shop \t| ✅ Order #{order.uuid} accepted\n")
     else
       {:error, error} ->
-        Logger.info("🛒 Shop  - ❌ Order #{order.uuid} due to #{error}\n")
+        Logger.info("🛒 Shop \t| ❌ Order #{order.uuid} due to #{error}\n")
     end
 
     {:noreply, %{state | count: count + 1}}

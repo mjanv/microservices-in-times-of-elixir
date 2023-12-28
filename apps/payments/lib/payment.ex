@@ -19,6 +19,11 @@ defmodule Payments.Payment do
   @doc "Create a new payment with a pending status"
   @spec new(order_uuid: String.t(), amount: integer()) :: t()
   def new(order_uuid: order_uuid, amount: amount) do
-    %__MODULE__{uuid: UUID.uuid4(), order_uuid: order_uuid, amount: amount, status: :pending}
+    %__MODULE__{
+      uuid: String.slice(UUID.uuid4(), 0..7),
+      order_uuid: order_uuid,
+      amount: amount,
+      status: :pending
+    }
   end
 end
