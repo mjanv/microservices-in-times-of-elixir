@@ -15,34 +15,39 @@ defmodule Orders.Shop do
 
   @impl true
   def init(_args) do
-    Logger.info("  🏪 Orders - 🌐 Backend - 🛒 Shop - Start service")
+    Logger.info("└ 🏪 Orders / Backend - 🛒 Shop - Start service")
     {:ok, %{count: 0}}
   end
 
   @doc "Send an order to the shop"
-  @spec send_order(Order.t()) :: {:ok, Order.t()} | {:error, :invalid_order}
+  @spec send_order(Order.t()) ::
+          {:accepted, Order.t()} | {:refused, Order.t()} | {:unavailable, Order.t()}
   def send_order(%Order{} = order) do
-    :ok = GenServer.cast(Orders.Shop, {:send_order, order})
-    {:ok, order}
+    GenServer.call(__MODULE__, {:send_order, order})
+  catch
+    :exit, _ -> {:unavailable, order}
   end
 
   def send_order(_), do: {:error, :invalid_order}
 
   @impl true
-  def handle_cast({:send_order, %Order{} = order}, %{count: count} = state) do
+  def handle_call({:send_order, %Order{} = order}, _from, %{count: count} = state) do
     Logger.info("🛒 Shop  \t| 🧾 New order #{order.uuid} received (#{count} orders today)")
 
-    with {:ok, _} <- stock_available?(order),
-         :ok <- Logger.info("🛒 Shop \t| ➡️  Stock available for order #{order.uuid}"),
-         {:ok, payment_uuid} <- pay_order(order),
-         :ok <- Logger.info("🛒 Shop \t| ➡️  Order #{order.uuid} payed #{payment_uuid}") do
-      Logger.info("🛒 Shop \t| ✅ Order #{order.uuid} accepted\n")
-    else
-      {:error, error} ->
-        Logger.info("🛒 Shop \t| ❌ Order #{order.uuid} due to #{error}\n")
-    end
+    response =
+      with {:ok, _} <- stock_available?(order),
+           :ok <- Logger.info("🛒 Shop \t| ➡️  Stock available for order #{order.uuid}"),
+           {:ok, payment_uuid} <- pay_order(order),
+           :ok <- Logger.info("🛒 Shop \t| ➡️  Order #{order.uuid} payed #{payment_uuid}") do
+        Logger.info("🛒 Shop \t| ✅ Order #{order.uuid} accepted\n")
+        {:accepted, order}
+      else
+        {:error, error} ->
+          Logger.info("🛒 Shop \t| ❌ Order #{order.uuid} due to #{error}\n")
+          {:refused, order}
+      end
 
-    {:noreply, %{state | count: count + 1}}
+    {:reply, response, %{state | count: count + 1}}
   end
 
   @doc "Send a payment request to the bank"
@@ -54,6 +59,6 @@ defmodule Orders.Shop do
   @doc "Check if the stock is available"
   @spec stock_available?(Order.t()) :: {:ok, integer()} | {:error, :no_items_left}
   def stock_available?(%Order{} = order) do
-    Stocks.stock_available?(order.uuid, order.items, Node.self())
+    GenServer.call({:global, Stocks.Warehouse}, {:remove_item, order.uuid, order.items})
   end
 end

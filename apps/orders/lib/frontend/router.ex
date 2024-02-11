@@ -8,23 +8,30 @@ defmodule Orders.Frontend.Router do
 
   get "/" do
     conn
-    |> put_resp_content_type("text/plain")
-    |> send_resp(200, "🏪 Orders")
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, """
+    <h1>🏪 Orders</h1>
+    <br \>
+    <a href=\"/orders/new\">New order</a>
+    """)
   end
 
   get "/orders/new" do
     conn
-    |> put_resp_content_type("text/plain")
+    |> put_resp_content_type("text/html")
     |> then(fn conn ->
       [items: 1, price: 1_000]
       |> Orders.Order.new()
       |> Orders.Shop.send_order()
       |> case do
-        {:ok, order} ->
-          send_resp(conn, 200, "✅ Order #{order.uuid} accepted")
+        {:accepted, order} ->
+          send_resp(conn, 200, "<h1>✅ Order #{order.uuid} accepted</h1>")
 
-        {:error, error} ->
-          send_resp(conn, 500, "❌ Order due to #{error}")
+        {:refused, order} ->
+          send_resp(conn, 200, "<h1>❌ Order #{order.uuid} refused</h1>")
+
+        {:unavailable, _} ->
+          send_resp(conn, 503, "<h1>🛑 Service unavailable</h1>")
       end
     end)
   end

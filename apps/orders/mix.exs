@@ -32,7 +32,6 @@ defmodule Orders.MixProject do
 
   defp deps do
     [
-      {:stocks, in_umbrella: true},
       {:uuid, "~> 1.1"},
       {:libcluster, "~> 3.3"},
       {:bandit, "~> 1.0"},

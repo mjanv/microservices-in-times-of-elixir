@@ -17,7 +17,8 @@ defmodule Orders.Frontend.Supervisor do
 
   @impl true
   def init(_args) do
-    Logger.info("  🏪 Orders - 🌐 Frontend - Start service")
+    # Logger.info("  🏪 Orders / Frontend - Start service")
+    Logger.info("├ 🏪 Orders / Frontend - 🌐 Webserver - Start service")
 
     children = [
       {Bandit, plug: Orders.Frontend.Router, startup_log: false}

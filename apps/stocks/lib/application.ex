@@ -16,7 +16,6 @@ defmodule Stocks.Application do
     end
 
     children = [
-      {Task.Supervisor, name: Stocks.TaskSupervisor},
       Stocks.Warehouse
     ]
 

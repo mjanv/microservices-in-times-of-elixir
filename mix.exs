@@ -8,28 +8,30 @@ defmodule Microservices.MixProject do
       apps_path: "apps",
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
       releases: releases(),
-      aliases: aliases()
+      aliases: aliases(),
+      deps: deps()
     ]
   end
 
   def releases do
     [
       monolith: [
-        reboot_system_after_config: true,
         applications: [orders: :permanent, payments: :permanent, stocks: :permanent],
-        cookie: "secret"
+        runtime_config_path: "config/runtime_monolith.exs"
       ],
       frontend: [
-        reboot_system_after_config: true,
         applications: [orders: :permanent],
-        cookie: "secret"
+        runtime_config_path: "config/runtime_service_based.exs"
       ],
       backend: [
-        reboot_system_after_config: true,
         applications: [payments: :permanent, stocks: :permanent],
-        cookie: "secret"
+        runtime_config_path: "config/runtime_service_based.exs"
+      ],
+      distributed: [
+        applications: [orders: :permanent, payments: :permanent, stocks: :permanent],
+        runtime_config_path: "config/runtime_distributed.exs",
+        reboot_system_after_config: true
       ]
     ]
   end

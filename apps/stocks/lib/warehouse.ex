@@ -10,34 +10,30 @@ defmodule Stocks.Warehouse do
   @doc "Start the warehouse"
   @spec start_link(any()) :: GenServer.on_start()
   def start_link(args) do
-    GenServer.start_link(__MODULE__, args, name: __MODULE__)
+    GenServer.start_link(__MODULE__, args, name: {:global, __MODULE__})
   end
 
   @impl true
   def init(_args) do
-    Logger.info("📦 Warehouse \t| Init")
+    Logger.info("└ 📦 Stocks - 🏭 Warehouse - Start service")
     {:ok, %Stock{items: 10}}
   end
 
   @doc "Check if the stock is available"
-  @spec stock_available?(String.t(), integer(), node()) ::
+  @spec stock_available?(String.t(), integer()) ::
           {:ok, integer()} | {:error, :no_items_left}
-  def stock_available?(order_uuid, items, node) do
-    {Stocks.TaskSupervisor, node}
-    |> Task.Supervisor.async(fn ->
-      GenServer.call(__MODULE__, {:remove_item, order_uuid, items})
-    end)
-    |> Task.await()
+  def stock_available?(order_uuid, items) do
+    GenServer.call(__MODULE__, {:remove_item, order_uuid, items})
   end
 
   @impl true
   def handle_call({:remove_item, order_uuid, items}, _from, stock) do
     stock
-    |> tap(fn _ -> Logger.info("📦 Warehouse \t| ⬅️  Can I remove #{items} items from stock ?") end)
+    |> tap(fn _ -> Logger.info("🏭 Warehouse \t| ⬅️  Can I remove #{items} items from stock ?") end)
     |> Stock.remove_items(items: items)
     |> tap(fn
-      {:ok, _} -> Logger.info("📦 Warehouse \t| ✅ We have enough stock for order #{order_uuid}")
-      {:error, _} -> Logger.info("📦 Warehouse \t| ❌ No stock available for order #{order_uuid}")
+      {:ok, _} -> Logger.info("🏭 Warehouse \t| ✅ We have enough stock for order #{order_uuid}")
+      {:error, _} -> Logger.info("🏭 Warehouse \t| ❌ No stock available for order #{order_uuid}")
     end)
     |> tap(fn _ -> Process.send_after(self(), :restock, 100) end)
     |> then(fn
@@ -52,7 +48,7 @@ defmodule Stocks.Warehouse do
     stock
     |> Stock.restock(threshold: 5, new_items: 10)
     |> tap(fn
-      {:ok, _} -> Logger.info("📦 Warehouse - 🔄 Restock 10 new items")
+      {:ok, _} -> Logger.info("🏭 Warehouse - 🔄 Restock 10 new items")
       {:error, _} -> :ok
     end)
     |> then(fn {_, stock} -> {:noreply, stock} end)

@@ -16,7 +16,7 @@ defmodule Payments.Bank do
 
   @impl true
   def init(_args) do
-    Logger.info("  💵 Payments - 🏦 Bank - Start service")
+    Logger.info("└ 💵 Payments - 🏦 Bank - Start service")
     {:ok, Ledger.new()}
   end
 

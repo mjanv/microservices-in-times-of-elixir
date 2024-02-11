@@ -17,7 +17,7 @@ defmodule Orders.Backend.Supervisor do
 
   @impl true
   def init(_args) do
-    Logger.info("  🏪 Orders - 🌐 Backend - Start service")
+    # Logger.info("  🏪 Orders - Backend - Start service")
 
     children = [
       Orders.Shop
