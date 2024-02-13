@@ -9,11 +9,13 @@ iex --sname b
 
 ```elixir
 # on node b
+Node.self()
 Node.list()
-Node.connect(:a@xpc)
+Node.connect(:a@xps)
 Node.list()
 
 # on node a
+Node.self()
 Node.list()
 ```
 
@@ -24,7 +26,7 @@ Hello.name("Human Talks")
 
 ```elixir
 # on node a
-Node.spawn(:b@xpc, fn -> Hello.name("Human Talks") end)
+Node.spawn(:b@xps, fn -> Hello.name("Human Talks") end)
 ```
 
 ```elixir
@@ -36,12 +38,12 @@ end
 
 ```elixir
 # on node a
-Node.spawn(:b@xpc, fn -> Hello.name("Human Talks") end)
+Node.spawn(:b@xps, fn -> Hello.name("Human Talks") end)
 ```
 
 ```elixir
 # on node a
-pid = Node.spawn :b@xpc, fn ->
+pid = Node.spawn :b@xps, fn ->
   receive do
     {:ping, a} -> send(a, :pong)
   end
@@ -74,4 +76,3 @@ just build distributed
 just deploy distributed a
 just deploy distributed b
 ```
-
