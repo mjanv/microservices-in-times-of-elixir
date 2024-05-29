@@ -16,8 +16,8 @@ defmodule Payments.Application do
     end
 
     children = [
-      Payments.Bank,
-      {Cluster.Supervisor, [topologies(), [name: Payments.Cluster]]}
+      {Cluster.Supervisor, [topologies(), [name: Payments.Cluster]]},
+      Payments.Bank
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Payments.Supervisor)

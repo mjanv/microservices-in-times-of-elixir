@@ -16,6 +16,7 @@ defmodule Stocks.Application do
     end
 
     children = [
+      # {Cluster.Supervisor, [topologies(), [name: Stocks.Cluster]]},
       Stocks.Warehouse
     ]
 
@@ -27,4 +28,6 @@ defmodule Stocks.Application do
     Logger.info("📦 Stocks - Stop service")
     :ok
   end
+
+  # defp topologies, do: Application.get_env(:libcluster, :topologies)
 end
